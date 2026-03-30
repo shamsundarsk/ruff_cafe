@@ -34,7 +34,10 @@ import {
 const IMAGES = {
   PANCAKES: "/pancakes.png",
   BURGER: "/burger.png",
-  FAVORITES: "/favorites.png"
+  FAVORITES: "/favorites.png",
+  HERO_MASCOT: "/mascot_hero.png",
+  PANCAKE_COMIC: "/pancake_comic.png",
+  MASCOT_BURGER: "/mascot_burger.png"
 };
 
 // --- Food Illustrations (Hand-Drawn Style) ---
@@ -129,7 +132,7 @@ const Stamp = ({ icon: Icon, color = "text-black", className = "" }: { icon: any
   </div>
 );
 
-const Panel = ({ children, className = "", noBorder = false, halftone = false }: { children: React.ReactNode, className?: string, noBorder?: boolean, halftone?: boolean }) => (
+const Panel = ({ children, className = "", innerClassName = "", noBorder = false, halftone = false }: { children: React.ReactNode, className?: string, innerClassName?: string, noBorder?: boolean, halftone?: boolean }) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -137,7 +140,7 @@ const Panel = ({ children, className = "", noBorder = false, halftone = false }:
     className={`relative bg-transparent ${!noBorder ? "border-2 border-black hand-drawn" : ""} ${className}`}
   >
     {halftone && <div className="absolute inset-0 halftone pointer-events-none" />}
-    <div className="relative z-10 h-full">
+    <div className={`relative z-10 h-full w-full ${innerClassName}`}>
       {children}
     </div>
   </motion.div>
@@ -231,8 +234,8 @@ export default function App() {
         </Panel>
 
         {/* Main Hero Content */}
-        <Panel className="md:col-span-11 grid grid-cols-1 md:grid-cols-2 bg-white overflow-hidden" halftone>
-          <div className="p-8 flex flex-col justify-between relative">
+        <Panel className="md:col-span-11 bg-white overflow-hidden border-2 border-black" innerClassName="grid grid-cols-1 lg:grid-cols-2" halftone>
+          <div className="p-8 md:p-12 flex flex-col justify-between relative border-b-2 lg:border-b-0 lg:border-r-2 border-black z-20">
             <div className="space-y-6">
               <div className="flex gap-2">
                 <Sticker color="bg-[#FF4E00] text-white">New Arrival</Sticker>
@@ -247,7 +250,7 @@ export default function App() {
             </div>
             
             <div className="mt-12 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full border-2 border-black flex items-center justify-center bg-yellow-400">
+              <div className="w-12 h-12 rounded-full border-2 border-black flex items-center justify-center bg-yellow-400 shadow-[2px_2px_0px_rgba(0,0,0,1)] hand-drawn">
                 <Dog className="w-6 h-6" />
               </div>
               <div>
@@ -255,54 +258,34 @@ export default function App() {
                 <div className="font-mono text-[10px] opacity-40 uppercase">Victoria Cafe & Kitchen</div>
               </div>
             </div>
-
-            {/* Floating Labels */}
-            <div className="absolute top-8 right-8 rotate-12">
-              <Stamp icon={Heart} color="text-red-500" className="scale-150" />
-            </div>
-            <div className="absolute bottom-1/4 -right-4 -rotate-6">
-              <Sticker color="bg-yellow-400">Limited Edition</Sticker>
-            </div>
           </div>
 
-          <div className="bg-[#2D5A27] relative min-h-[400px] flex items-center justify-center overflow-hidden border-l-2 border-black group">
-            {/* Main Burger Visual for the Hero Panel Placeholder */}
-            <motion.div 
-               whileHover={{ scale: 1.02, rotate: -1 }}
-               className="absolute inset-0 flex items-center justify-center -translate-x-1/2 md:translate-x-0"
-            >
-               <img src={IMAGES.BURGER} className="w-[120%] h-full object-cover grayscale brightness-200 group-hover:grayscale-0 transition-all duration-700" />
-            </motion.div>
-            
-            <motion.div 
-              animate={{ y: [0, -10, 0], rotate: [0, 2, -2, 0] }}
-              transition={{ repeat: Infinity, duration: 4 }}
-              className="relative z-20"
-            >
-              <div className="w-64 h-64 md:w-80 md:h-80 bg-white border-4 border-black rounded-full flex items-center justify-center shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hand-drawn">
-                <Dog className="w-40 h-40 md:w-56 md:h-56 text-black" strokeWidth={1.5} />
-              </div>
-              <SpeechBubble className="absolute -top-4 -right-4">Woof!</SpeechBubble>
-              <div className="absolute -bottom-4 -left-4 bg-white border-2 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hand-drawn">
-                <div className="flex gap-1 mb-2">
-                  {[...Array(5)].map((_, i) => <Star key={i} size={10} className="fill-yellow-400 text-yellow-400" />)}
-                </div>
-                <div className="font-black text-[10px] uppercase">Best Breakfast</div>
-              </div>
-            </motion.div>
-            
-            {/* Background elements */}
-            <div className="absolute inset-0 opacity-10 grid grid-cols-6 gap-4 p-4 z-10">
-              {[...Array(24)].map((_, i) => <Coffee key={i} size={40} className="text-white" />)}
-            </div>
-
-            {/* Comic Onomatopoeia */}
-            <div className="absolute top-12 left-12 -rotate-12 font-black text-white/20 text-4xl italic tracking-tighter z-20">
-              SLURP!
-            </div>
-            <div className="absolute bottom-12 right-12 rotate-12 font-black text-white/20 text-4xl italic tracking-tighter z-20">
-              WAG!
-            </div>
+          <div className="relative min-h-[400px] flex items-center justify-center bg-yellow-400 overflow-hidden group">
+             {/* Beautiful massive comic image covering the whole right half */}
+             <img 
+                src={IMAGES.HERO_MASCOT} 
+                className="absolute inset-0 w-[120%] h-[120%] left-[-10%] bottom-[-10%] object-cover object-bottom mix-blend-multiply grayscale group-hover:grayscale-0 transition-all duration-700" 
+                alt="Hero Mascot"
+             />
+             <div className="absolute inset-0 halftone opacity-30 pointer-events-none" />
+             
+             {/* Circular badge in corner */}
+             <motion.div 
+               animate={{ y: [0, -10, 0] }}
+               transition={{ repeat: Infinity, duration: 4 }}
+               className="absolute bottom-12 right-12 z-20 hidden md:block"
+             >
+               <div className="w-32 h-32 md:w-48 md:h-48 bg-white border-4 border-black rounded-full flex items-center justify-center shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hand-drawn group-hover:-translate-y-2 group-hover:scale-105 transition-all">
+                 <Dog className="w-20 h-20 md:w-32 md:h-32 text-black" strokeWidth={1.5} />
+               </div>
+               <SpeechBubble className="absolute -top-4 -right-2">Woof!</SpeechBubble>
+               <div className="absolute -bottom-4 -left-4 bg-white border-2 border-black p-3 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hand-drawn">
+                 <div className="flex gap-1 mb-1">
+                   {[...Array(5)].map((_, i) => <Star key={i} size={8} className="fill-yellow-400 text-yellow-400" />)}
+                 </div>
+                 <div className="font-black text-[10px] uppercase">Best Breakfast</div>
+               </div>
+             </motion.div>
           </div>
         </Panel>
       </div>
@@ -375,9 +358,9 @@ export default function App() {
       </div>
 
       {/* 3. FEATURE PANEL (DESSERT) */}
-      <Panel className="grid grid-cols-1 md:grid-cols-3 bg-white overflow-hidden group" halftone>
-        <div className="md:col-span-2 p-8 border-r-2 border-black flex flex-col justify-between bg-[#F9FAFB]/80 backdrop-blur-sm relative z-20">
-          <div className="space-y-4">
+      <Panel className="bg-white overflow-hidden group border-2 border-black" innerClassName="grid grid-cols-1 lg:grid-cols-2" halftone>
+        <div className="p-8 md:p-12 border-b-2 lg:border-b-0 lg:border-r-2 border-black flex flex-col justify-between bg-[#F9FAFB]/90 backdrop-blur-sm relative z-20">
+          <div className="space-y-4 relative z-10">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-[#FF4E00] rounded-full" />
               <span className="font-mono text-[10px] font-bold uppercase tracking-widest">Dessert Selection</span>
@@ -398,36 +381,19 @@ export default function App() {
           </div>
         </div>
         
-        <div className="md:col-span-1 p-0 flex items-center justify-center relative bg-orange-50 font-sans min-h-[300px] border-b-2 md:border-b-0 border-black overflow-hidden group">
-          {/* Main Pancake Illustration Replacement for huge "?" */}
-          <motion.div 
-            whileHover={{ scale: 1.1, rotate: 1 }}
-            className="absolute inset-0 flex items-center justify-center overflow-hidden"
-          >
-            <img 
-              src={IMAGES.PANCAKES} 
-              className="w-[120%] h-[120%] object-cover object-center grayscale brightness-110 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700 md:rotate-1"
-              alt="Pancakes Feature"
-            />
-          </motion.div>
-          
-          {/* Bottom Left Small Illustration replacement for small "?" */}
-          <div className="absolute bottom-0 left-0 w-1/2 h-1/3 bg-white border-t-2 border-r-2 border-black z-30 overflow-hidden halftone">
-             <motion.img 
-              whileHover={{ scale: 1.1, rotate: -3 }}
-              src={IMAGES.FAVORITES} 
-              className="w-full h-full object-cover object-right opacity-80"
-              style={{ objectPosition: "80% 20%" }} 
-              alt="Mini Treat"
-             />
-             <div className="absolute top-2 left-2 flex gap-1"><Star size={10} className="fill-yellow-400 text-yellow-400" /></div>
+        <div className="p-0 flex items-center justify-center relative bg-orange-100 font-sans min-h-[400px] overflow-hidden group-hover:bg-orange-200 transition-colors duration-500">
+          <img 
+            src={IMAGES.PANCAKE_COMIC} 
+            className="absolute inset-0 w-full h-full object-cover object-center grayscale mix-blend-multiply group-hover:grayscale-0 transition-all duration-700 hover:scale-105"
+            alt="Pancakes Feature"
+          />
+          <div className="absolute top-8 right-8 z-20 rotate-12 hidden md:block">
+            <Sticker color="bg-blue-200" className="scale-125">Extra Syrup!</Sticker>
           </div>
-
-          <div className="absolute top-4 left-4 z-20"><Star className="text-yellow-400 fill-yellow-400" size={24} /></div>
-          <div className="absolute bottom-4 right-4 z-20 rotate-12 font-black text-white drop-shadow-[2px_2px_0px_black] text-6xl italic pointer-events-none">SWEET!</div>
+          <div className="absolute top-4 left-4 z-20 hidden md:block"><Star className="text-yellow-400 fill-yellow-400" size={32} /></div>
           
-          <ComicBurst className="absolute top-8 left-1/2 -translate-x-1/2 scale-150 z-30 opacity-0 group-hover:opacity-100 transition-opacity">
-            <div className="px-4 py-2 font-black text-xl text-white drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+          <ComicBurst className="absolute bottom-8 right-8 scale-125 z-30 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="px-4 py-2 font-black text-xl text-black drop-shadow-[2px_2px_0px_#fff]">
               $12.9
             </div>
           </ComicBurst>
@@ -435,10 +401,11 @@ export default function App() {
       </Panel>
 
       {/* 4. PIZZA & SHAKES PANELS */}
+      {/* 4. PIZZA & SHAKES PANELS */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Pizza Panel */}
-        <Panel className="p-0 bg-white overflow-hidden grid grid-cols-2 border-2 border-black group">
-          <div className="p-8 flex flex-col justify-between relative z-20 bg-white/80 md:bg-transparent backdrop-blur-sm md:backdrop-blur-0">
+        <Panel className="bg-white overflow-hidden border-2 border-black group" innerClassName="grid grid-cols-1 lg:grid-cols-2">
+          <div className="p-8 flex flex-col justify-between border-b-2 lg:border-b-0 lg:border-r-2 border-black relative z-20">
             <div className="space-y-4">
               <Sticker color="bg-red-500 text-white">Loaded Pizza</Sticker>
               <h3 className="text-4xl font-black uppercase tracking-tighter leading-none">
@@ -450,33 +417,31 @@ export default function App() {
                <div className="font-black text-xs uppercase italic">"Too good to share."</div>
             </div>
           </div>
-          {/* Pizza Illustration area for huge "?" replacement */}
-          <div className="bg-orange-50 flex items-center justify-center border-l-2 border-black relative halftone overflow-hidden">
-             <motion.img 
-              whileHover={{ scale: 1.15, x: -5, rotate: 1 }}
-              src={IMAGES.FAVORITES} 
-              className="absolute inset-0 w-[200%] h-full object-cover transition-all duration-700 grayscale hover:grayscale-0"
-              style={{ objectPosition: "5% 60%" }}
+          <div className="bg-yellow-300 flex items-center justify-center relative overflow-hidden min-h-[300px]">
+             <img 
+              src={IMAGES.MASCOT_BURGER} 
+              className="absolute inset-0 w-full h-full object-cover mix-blend-multiply grayscale group-hover:grayscale-0 transition-all duration-700 hover:scale-105"
+              alt="Classic Pizza Comic"
              />
-             <div className="absolute top-2 right-2 flex gap-1 z-20">
-              <Sticker color="bg-yellow-400" rotate={-10} className="scale-75">HOT!</Sticker>
+             <div className="absolute bottom-4 right-4 z-20">
+              <Sticker color="bg-red-500 text-white" rotate={-10} className="scale-125">HOT!</Sticker>
              </div>
           </div>
         </Panel>
 
         {/* Shake Panel */}
-        <Panel className="p-0 bg-white overflow-hidden grid grid-cols-2 border-2 border-black group">
-          {/* Beverage Illustration area for huge "?" replacement */}
-          <div className="bg-blue-50 flex items-center justify-center border-r-2 border-black relative halftone overflow-hidden">
-             <motion.img 
-              whileHover={{ scale: 1.15, x: 5, rotate: -1 }}
+        <Panel className="bg-[#FF4E00] text-white overflow-hidden border-2 border-black group" innerClassName="grid grid-cols-1 lg:grid-cols-2">
+          <div className="bg-blue-300 flex items-center justify-center relative overflow-hidden min-h-[300px] border-b-2 lg:border-b-0 lg:border-r-2 border-black order-2 lg:order-1">
+             <img 
               src={IMAGES.FAVORITES} 
-              className="absolute inset-0 w-[200%] h-full object-cover transition-all duration-700 grayscale hover:grayscale-0"
-              style={{ objectPosition: "95% 50%" }}
+              className="absolute inset-0 w-full h-full object-cover mix-blend-multiply grayscale group-hover:grayscale-0 transition-all duration-700 hover:scale-105"
+              alt="Mascot Shake Comic"
              />
-             <div className="absolute top-4 left-4 -rotate-12 font-black text-blue-500/20 text-4xl italic z-20 pointer-events-none">SLURP!</div>
+             <div className="absolute top-4 left-4 z-20">
+              <Sticker color="bg-white text-black" rotate={12}>SLURP!</Sticker>
+             </div>
           </div>
-          <div className="p-8 flex flex-col justify-between bg-[#FF4E00] text-white relative z-20 overflow-hidden">
+          <div className="p-8 flex flex-col justify-between relative z-20 order-1 lg:order-2">
             <div className="space-y-4">
               <Sticker color="bg-white text-black" rotate={-5}>Thick Shake</Sticker>
               <h3 className="text-4xl font-black uppercase tracking-tighter leading-none">
@@ -484,8 +449,6 @@ export default function App() {
               </h3>
               <p className="text-[10px] font-mono font-bold uppercase opacity-60 text-white/80">Creamy top & ice cubes.</p>
             </div>
-            {/* Small decorative ghosting image */}
-            <img src={IMAGES.FAVORITES} className="absolute -bottom-8 -right-8 w-32 h-32 opacity-10 rotate-12 pointer-events-none" style={{ objectPosition: "right" }} />
             <ArrowRight size={32} className="text-white self-end relative z-30" />
           </div>
         </Panel>
@@ -559,32 +522,42 @@ export default function App() {
       </Panel>
 
       {/* 6. CTA PANEL (BOTTOM) */}
-      <Panel className="bg-[#FF4E00] p-12 md:p-24 text-center space-y-8 overflow-hidden" halftone>
-        <motion.div
-          animate={{ scale: [1, 1.05, 1] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="relative z-10"
-        >
-          <h2 className="text-7xl md:text-9xl font-black text-white uppercase tracking-tighter leading-none drop-shadow-[8px_8px_0px_rgba(0,0,0,1)]">
-            JOIN THE<br/>PACK
-          </h2>
-        </motion.div>
-        
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 relative z-10">
-          <button className="w-full md:w-auto px-12 py-6 bg-white text-black border-4 border-black font-black text-2xl uppercase tracking-widest shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all hand-drawn">
-            COME AGAIN
-          </button>
-          <div className="flex gap-4">
-            <Stamp icon={Heart} className="bg-white text-red-500 scale-125" />
-            <Stamp icon={Star} className="bg-white text-yellow-500 scale-125" />
+      <Panel className="bg-[#FF4E00] p-12 md:p-24 overflow-hidden" halftone>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center relative z-20">
+          
+          <div className="hidden lg:block w-full h-80 bg-green-200 border-4 border-black p-3 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] -rotate-6 hand-drawn transform hover:rotate-0 transition-transform duration-500">
+            <img src={IMAGES.HERO_MASCOT} className="w-full h-full object-cover object-bottom mix-blend-multiply grayscale hover:grayscale-0 transition-all duration-500" alt="Dog Mascot" />
           </div>
+          
+          <div className="text-center space-y-8 flex flex-col items-center justify-center col-span-1 lg:col-span-1">
+            <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ repeat: Infinity, duration: 2 }}>
+              <h2 className="text-7xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none drop-shadow-[8px_8px_0px_rgba(0,0,0,1)]">
+                JOIN THE<br/>PACK
+              </h2>
+            </motion.div>
+            
+            <div className="flex flex-col items-center justify-center gap-6 w-full">
+              <button className="w-full px-8 py-5 bg-white text-black border-4 border-black font-black text-xl md:text-2xl uppercase tracking-widest shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all hand-drawn text-center whitespace-nowrap">
+                COME AGAIN
+              </button>
+              <div className="flex gap-4">
+                <Stamp icon={Heart} className="bg-white text-red-500 scale-125" />
+                <Stamp icon={Star} className="bg-white text-yellow-500 scale-125" />
+              </div>
+            </div>
+          </div>
+
+          <div className="hidden lg:block w-full h-80 bg-purple-200 border-4 border-black p-3 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rotate-6 hand-drawn transform hover:rotate-0 transition-transform duration-500">
+            <img src={IMAGES.MASCOT_BURGER} className="w-full h-full object-cover object-bottom mix-blend-multiply grayscale hover:grayscale-0 transition-all duration-500" alt="Burger Mascot" />
+          </div>
+
         </div>
 
         {/* Comic Burst Background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] opacity-20 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] opacity-20 pointer-events-none z-0">
           <div className="w-full h-full bg-white rotate-12 scale-150" style={{ clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }} />
         </div>
-
+        
         {/* Decorative Background Text */}
         <div className="absolute -bottom-8 left-0 w-full text-[15vw] font-black text-white/10 uppercase tracking-tighter leading-none select-none pointer-events-none">
           RUFF RUFF RUFF
